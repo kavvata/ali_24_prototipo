@@ -1,0 +1,15 @@
+## Quadro POV
+
+| Usuário   | Necessidade                                                                                  | Insight                                                                                                                                                                                                                                                                                                       |
+| --------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bolsista  | Registrar ocorrências de táxons da amostra de forma rápida e com clareza do que está fazendo | Um registro errado nessa etapa pode causar alterações na análise estatística. Quanto mais simples e rápida for essa atividade, menor o cansaço cognitivo do usuário e menor a chance de erros serem cometidos. Da mesma forma, um retorno claro do que está sendo registrado também reduz as chances de erros |
+| Professor | Organizar registros de ocorrências de táxons em lote e de forma consistente                  | O usuário não deve ter medo de reorganizar seus dados. caso o mesmo deseje incluir táxons novos em uma amostra, o mesmo deve poder fazer isso com facilidade e com garantia de consistência de estrutura de dados                                                                                             |
+| Professor | Gerar análises estatísticas a partir dos registros de dados                                  | o usuário deve poder reutilizar fórmulas estatísticas com as amostras que desejar, sem se preocupar com criação de planilhas separadas, versões de arquivos diferentes ou erros por inconsistência de estrutura de planilhas e as ferramentas de análise utilizada                                            |
+
+## POV Madlib
+
+1. O **bolsista** precisa registrar as ocorrências de táxons de forma rápida e com clareza sobre o que está fazendo, porque um erro nesta etapa pode comprometer a análise estatística: quanto mais simples e ágil for o registro, menor o cansaço cognitivo do usuário e menor a chance de erro. Também, um retorno claro do que está sendo registrado só reforça essa segurança.
+
+2. O **professor** precisa organizar os registros de ocorrências de táxons em lote e de forma consistente, porque não deve temer reorganizar seus dados: ao querer incluir novos táxons em uma amostra, deve poder fazê-lo com facilidade e com a garantia de que a estrutura dos dados permanece consistente.
+
+3. O **professor** precisa gerar análises estatísticas a partir dos registros de dados, porque deve poder reutilizar as fórmulas estatísticas nas amostras que desejar, sem se preocupar com planilhas separadas, versões diferentes de arquivos ou com erros decorrentes de inconsistências na estrutura das planilhas e das ferramentas de análise.
