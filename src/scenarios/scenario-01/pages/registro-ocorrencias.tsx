@@ -24,8 +24,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 import { TAXA, type Taxon } from "../index";
-
-type Entrada = { taxon: Taxon; qtd: number; anterior: number };
+import { useCenario01, type Entrada } from "../state";
 
 function sigla(nome: string) {
   const [g, ...resto] = nome.split(" ");
@@ -33,18 +32,13 @@ function sigla(nome: string) {
 }
 
 export function RegistroOcorrencias() {
-  const [entradas, setEntradas] = useState<Entrada[]>([]);
+  const { entradas, totais, registrar, desfazer } = useCenario01();
   const [taxon, setTaxon] = useState<Taxon | null>(null);
   const [qtd, setQtd] = useState("1");
   const [desfeita, setDesfeita] = useState<Entrada | null>(null);
+  const [sobreDesfazer, setSobreDesfazer] = useState(false);
   const inputQtd = useRef<HTMLInputElement>(null);
   const inputTaxon = useRef<HTMLInputElement>(null);
-
-  const totais = useMemo(() => {
-    const m = new Map<string, number>();
-    for (const e of entradas) m.set(e.taxon, (m.get(e.taxon) ?? 0) + e.qtd);
-    return m;
-  }, [entradas]);
 
   const totalOcorrencias = useMemo(
     () => [...totais.values()].reduce((a, b) => a + b, 0),
@@ -55,18 +49,18 @@ export function RegistroOcorrencias() {
   const qtdNumero = Number(qtd);
   const qtdValida = Number.isInteger(qtdNumero) && qtdNumero >= 1;
 
-  function registrar() {
+  function registrarOcorrencia() {
     if (!taxon || !qtdValida) return;
-    setEntradas((es) => [...es, { taxon, qtd: qtdNumero, anterior: totais.get(taxon) ?? 0 }]);
+    registrar(taxon, qtdNumero);
     setTaxon(null);
     setQtd("1");
     setDesfeita(null);
     inputTaxon.current?.focus();
   }
 
-  function desfazer() {
+  function desfazerUltima() {
     if (!ultima) return;
-    setEntradas((es) => es.slice(0, -1));
+    desfazer();
     setDesfeita(ultima);
     inputTaxon.current?.focus();
   }
@@ -78,55 +72,56 @@ export function RegistroOcorrencias() {
         <CardHeader>
           <CardTitle className="text-base">Registrar ocorrência</CardTitle>
           <CardDescription>
-            Digite parte do nome do táxon, escolha na lista e informe a contagem. Contagens
-            repetidas do mesmo táxon somam automaticamente.
+            Digite parte do nome do táxon, escolha na lista e informe a
+            contagem. Contagens repetidas do mesmo táxon somam automaticamente.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Táxon</Label>
-            <Combobox
-              items={TAXA}
-              value={taxon}
-              openOnInputClick
-              autoHighlight
-              onValueChange={(v) => {
-                setTaxon(typeof v === "string" ? v : null);
-                setDesfeita(null);
-                if (typeof v === "string") {
-                  setQtd("1");
-                  inputQtd.current?.focus();
+          <div className="flex flex-wrap items-end gap-x-4 gap-y-4">
+            <div className="min-w-60 flex-1 space-y-2">
+              <Label>Táxon</Label>
+              <Combobox
+                items={TAXA}
+                value={taxon}
+                openOnInputClick
+                autoHighlight
+                onValueChange={(v) => {
+                  setTaxon(typeof v === "string" ? v : null);
+                  setDesfeita(null);
+                  if (typeof v === "string") {
+                    setQtd("1");
+                    inputQtd.current?.focus();
+                  }
+                }}
+                filter={(item, query) =>
+                  item.toLowerCase().includes(query.toLowerCase())
                 }
-              }}
-              filter={(item, query) => item.toLowerCase().includes(query.toLowerCase())}
-            >
-              <ComboboxInput
-                ref={inputTaxon}
-                showClear
-                placeholder="Ex.: pseudodiaptomus…"
-                className="w-full max-w-sm"
-              />
-              <ComboboxContent>
-                <ComboboxList>
-                  {/* filter só age sobre o props `items`, então os itens são renderizados via Collection */}
-                  <ComboboxCollection>
-                    {(item: Taxon) => (
-                      <ComboboxItem key={item} value={item}>
-                        <em>{item}</em>
-                      </ComboboxItem>
-                    )}
-                  </ComboboxCollection>
-                  <ComboboxEmpty>Nenhum táxon encontrado.</ComboboxEmpty>
-                </ComboboxList>
-              </ComboboxContent>
-            </Combobox>
-          </div>
+              >
+                <ComboboxInput
+                  ref={inputTaxon}
+                  showClear
+                  placeholder="Ex.: pseudodiaptomus…"
+                  className="w-full max-w-sm"
+                />
+                <ComboboxContent>
+                  <ComboboxList>
+                    {/* filter só age sobre o props `items`, então os itens são renderizados via Collection */}
+                    <ComboboxCollection>
+                      {(item: Taxon) => (
+                        <ComboboxItem key={item} value={item}>
+                          <em>{item}</em>
+                        </ComboboxItem>
+                      )}
+                    </ComboboxCollection>
+                    <ComboboxEmpty>Nenhum táxon encontrado.</ComboboxEmpty>
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
+            </div>
 
-          {/* Bloco sempre renderizado (invisible quando inativo) para o card não mudar de tamanho */}
-          <div className={cn(!taxon && "invisible")}>
-            <div className="flex items-end gap-3">
+            <div className="flex items-end gap-3 space-y-2">
               <div className="space-y-2">
-                <Label htmlFor="qtd">Quantos indivíduos de {taxon ? sigla(taxon) : ""}?</Label>
+                <Label htmlFor="qtd">Quantas ocorrências?</Label>
                 <Input
                   id="qtd"
                   ref={inputQtd}
@@ -135,27 +130,34 @@ export function RegistroOcorrencias() {
                   step={1}
                   value={qtd}
                   onChange={(e) => setQtd(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && registrar()}
+                  onKeyDown={(e) => e.key === "Enter" && registrarOcorrencia()}
                   className="w-28"
                 />
               </div>
-              <Button onClick={registrar} disabled={!taxon || !qtdValida}>
+              <Button
+                onClick={registrarOcorrencia}
+                disabled={!taxon || !qtdValida}
+              >
                 Registrar
               </Button>
             </div>
           </div>
 
-          <p className={cn("text-sm text-muted-foreground", !desfeita && "invisible")}>
+          <p
+            className={cn(
+              "text-sm text-muted-foreground",
+              !desfeita && "invisible",
+            )}
+          >
             {desfeita ? (
               <>
-                Desfeito: {sigla(desfeita.taxon)} (+{desfeita.qtd}) — total voltou para{" "}
-                {totais.get(desfeita.taxon) ?? 0}.
+                Desfeito: {sigla(desfeita.taxon)} (+{desfeita.qtd}) — total
+                voltou para {totais.get(desfeita.taxon) ?? 0}.
               </>
             ) : (
               "\u00A0"
             )}
           </p>
-
         </CardContent>
       </Card>
 
@@ -168,21 +170,46 @@ export function RegistroOcorrencias() {
             <strong>{totais.size}</strong> táxons
           </CardDescription>
           <CardAction>
-            <Button variant="outline" size="sm" onClick={desfazer} disabled={!ultima}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={desfazerUltima}
+              disabled={!ultima}
+              onMouseEnter={() => setSobreDesfazer(true)}
+              onMouseLeave={() => setSobreDesfazer(false)}
+              onFocus={() => setSobreDesfazer(true)}
+              onBlur={() => setSobreDesfazer(false)}
+            >
               <Undo2 /> Desfazer última entrada
             </Button>
           </CardAction>
         </CardHeader>
         <CardContent className="space-y-1">
           {registrados.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Nenhum táxon registrado ainda.</p>
+            <p className="text-sm text-muted-foreground">
+              Nenhum táxon registrado ainda.
+            </p>
           ) : (
             registrados.map((t) => (
-              <div key={t} className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm">
+              <div
+                key={t}
+                className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm"
+              >
                 <em>{t}</em>
                 <span className="ml-auto flex items-center gap-2">
-                  {ultima?.taxon === t && <span className="text-green-600">+{ultima.qtd}</span>}
-                  <span className="text-muted-foreground">{totais.get(t)} ind.</span>
+                  {ultima?.taxon === t && (
+                    <span
+                      className={cn(
+                        "text-green-600 transition-colors",
+                        sobreDesfazer && "-mx-1 rounded bg-amber-200/80 px-1",
+                      )}
+                    >
+                      +{ultima.qtd}
+                    </span>
+                  )}
+                  <span className="text-muted-foreground">
+                    {totais.get(t)} ocorr.
+                  </span>
                 </span>
               </div>
             ))

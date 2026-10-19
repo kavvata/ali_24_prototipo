@@ -1,14 +1,21 @@
 import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CENARIO_01 } from "@/scenarios/scenario-01";
 import "../styles/globals.css";
-
 // Quando o cenário 02 existir, o cenário ativo é escolhido aqui (ou via seletor).
 const cenario = CENARIO_01;
 
 export function App() {
   const [pagina, setPagina] = useState(0);
+
+  const paginas = cenario.paginas.map(({ id, Componente }, i) => (
+    <section key={id} hidden={i !== pagina} className="space-y-4">
+      <Componente irPara={setPagina} />
+    </section>
+  ));
 
   return (
     <div className="min-h-dvh">
@@ -54,12 +61,27 @@ export function App() {
       </header>
 
       {/* Todas as páginas ficam montadas (ocultas quando inativas) para não perder o estado ao navegar */}
-      <main className="mx-auto max-w-2xl px-4 py-6">
-        {cenario.paginas.map(({ id, Componente }, i) => (
-          <section key={id} hidden={i !== pagina} className="space-y-4">
-            <Componente />
-          </section>
-        ))}
+      <main className="mx-auto max-w-2xl space-y-4 px-4 py-6">
+        {cenario.Provider ? (
+          <cenario.Provider>{paginas}</cenario.Provider>
+        ) : (
+          paginas
+        )}
+        {/* Rodapé de navegação — oculto na última página, que define o próprio CTA */}
+        {pagina < cenario.paginas.length - 1 && (
+          <div className="flex items-center justify-between">
+            <Button
+              variant="outline"
+              onClick={() => setPagina((p) => Math.max(p - 1, 0))}
+              disabled={pagina === 0}
+            >
+              <ChevronLeft /> Voltar
+            </Button>
+            <Button onClick={() => setPagina((p) => Math.min(p + 1, cenario.paginas.length - 1))}>
+              Próxima etapa <ChevronRight />
+            </Button>
+          </div>
+        )}
       </main>
     </div>
   );

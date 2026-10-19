@@ -1,6 +1,8 @@
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Cenario } from "../index";
+import { Cenario01Provider } from "./state";
 import { RegistroOcorrencias } from "./pages/registro-ocorrencias";
+import { RevisaoContagens } from "./pages/revisao-contagens";
+import { ResumoAmostra } from "./pages/resumo";
 
 export type Taxon = string;
 
@@ -17,18 +19,6 @@ export const TAXA: Taxon[] = [
   "Parvocalanus parvus",
 ].sort();
 
-// Placeholder para as etapas do cenário que ainda não foram implementadas.
-function EmBreve({ etapa }: { etapa: number }) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base">Etapa {etapa}</CardTitle>
-        <CardDescription>Esta etapa ainda não foi implementada.</CardDescription>
-      </CardHeader>
-    </Card>
-  );
-}
-
 export const CENARIO_01: Cenario = {
   id: "01",
   amostra: {
@@ -39,7 +29,8 @@ export const CENARIO_01: Cenario = {
   },
   paginas: [
     { id: "registro", rotulo: "Registro de ocorrências", Componente: RegistroOcorrencias },
-    { id: "etapa-2", rotulo: "Etapa 2", Componente: () => <EmBreve etapa={2} /> },
-    { id: "etapa-3", rotulo: "Etapa 3", Componente: () => <EmBreve etapa={3} /> },
+    { id: "revisao", rotulo: "Revisão de contagens", Componente: RevisaoContagens },
+    { id: "resumo", rotulo: "Resumo da amostra", Componente: ResumoAmostra },
   ],
+  Provider: Cenario01Provider,
 };
