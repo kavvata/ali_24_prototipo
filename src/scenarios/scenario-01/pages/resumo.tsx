@@ -1,7 +1,13 @@
 import { BadgeCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import type { PaginaProps } from "@/scenarios";
 
 import { useAmostras } from "@/amostras";
@@ -20,19 +26,24 @@ export function ResumoAmostra({ irPara }: PaginaProps) {
     <>
       <div className="flex flex-col items-center gap-3 py-2">
         <BadgeCheck className="size-24 text-green-600" aria-hidden />
-        <h2 className="text-2xl font-semibold tracking-tight">Amostra finalizada</h2>
+        <h2 className="text-2xl font-semibold tracking-tight">
+          Amostra finalizada
+        </h2>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Resumo da amostra</CardTitle>
           <CardDescription>
-            Amostra {amostra.id} · {amostra.data} · {amostra.estacao} · {amostra.coords}
+            Amostra {amostra.id} · {amostra.data} · {amostra.estacao} ·{" "}
+            {amostra.coords}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {registrados.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Nenhum táxon registrado.</p>
+            <p className="text-sm text-muted-foreground">
+              Nenhum táxon registrado.
+            </p>
           ) : (
             <table className="w-full text-sm">
               <thead>

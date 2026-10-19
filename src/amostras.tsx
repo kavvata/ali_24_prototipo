@@ -34,7 +34,7 @@ const INICIAIS: Amostra[] = [
   {
     id: "A-17",
     data: "28/10/2021",
-    estacao: "Estação 1 – Parque Estadual do Boguaçu, Guaratuba (PR)",
+    estacao: "Estação 1 – Boguaçu, Guaratuba (PR)",
     coords: "25°44′S 48°33′W",
     ocorrencias: {
       "Chelorchestia darwinii": 14,
@@ -48,7 +48,7 @@ const INICIAIS: Amostra[] = [
   {
     id: "A-16",
     data: "22/10/2021",
-    estacao: "Estação 1 – Parque Estadual do Boguaçu, Guaratuba (PR)",
+    estacao: "Estação 1 – Boguaçu, Guaratuba (PR)",
     coords: "25°44′S 48°33′W",
     ocorrencias: {
       "Chelorchestia darwinii": 8,
