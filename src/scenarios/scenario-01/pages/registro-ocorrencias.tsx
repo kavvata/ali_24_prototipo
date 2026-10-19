@@ -100,7 +100,7 @@ export function RegistroOcorrencias() {
                 <ComboboxInput
                   ref={inputTaxon}
                   showClear
-                  placeholder="Ex.: pseudodiaptomus…"
+                  placeholder="Ex.: chelorchestia…"
                   className="w-full max-w-sm"
                   onKeyDown={(e) => {
                     // Tab com texto na busca confirma o item destacado, como se fosse Enter

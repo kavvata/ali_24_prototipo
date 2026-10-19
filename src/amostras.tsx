@@ -22,41 +22,54 @@ const Ctx = createContext<AmostrasCtx | null>(null);
 
 export function useAmostras() {
   const ctx = useContext(Ctx);
-  if (!ctx) throw new Error("useAmostras precisa estar dentro do AmostrasProvider");
+  if (!ctx)
+    throw new Error("useAmostras precisa estar dentro do AmostrasProvider");
   return ctx;
 }
 
+// Contagens próximas à média por amostra da Tabela 2 (Santos, 2024):
+// 2.146 indivíduos em 9 manguezais (81 amostras) → média de ~26 indiv./amostra.
+// Locais e datas de Tabela 1 (amostragem em out–nov/2021).
 const INICIAIS: Amostra[] = [
   {
     id: "A-17",
-    data: "12/03/2025",
-    estacao: "Estação 3 – Rio Piraí",
-    coords: "22°51′S 43°12′W",
+    data: "28/10/2021",
+    estacao: "Estação 1 – Parque Estadual do Boguaçu, Guaratuba (PR)",
+    coords: "25°44′S 48°33′W",
     ocorrencias: {
-      "Pseudodiaptomus forbesi": 34,
-      "Daphnia galeata": 21,
-      "Bosmina coregoni": 8,
+      "Chelorchestia darwinii": 14,
+      "Chironomidae (larva)": 3,
+      "Sinelobus stanfordi": 2,
+      "Trombicula sp": 1,
+      Nematoda: 1,
+      Oligochaeta: 1,
     },
   },
   {
     id: "A-16",
-    data: "05/03/2025",
-    estacao: "Estação 2 – Rio Piraí",
-    coords: "22°49′S 43°15′W",
+    data: "22/10/2021",
+    estacao: "Estação 1 – Parque Estadual do Boguaçu, Guaratuba (PR)",
+    coords: "25°44′S 48°33′W",
     ocorrencias: {
-      "Cyclops strenuus": 12,
-      "Moina micrura": 6,
+      "Chelorchestia darwinii": 8,
+      "Ceratopogonidae (larva)": 2,
+      Nematoda: 2,
+      "Trochammina inflata": 1,
+      "Littoraria angulifera": 1,
     },
   },
   {
     id: "A-15",
-    data: "26/02/2025",
-    estacao: "Estação 3 – Rio Piraí",
-    coords: "22°51′S 43°12′W",
+    data: "15/10/2021",
+    estacao: "Estação 2 – Rio Itiberê, Paranaguá (PR)",
+    coords: "25°31′S 48°30′W",
     ocorrencias: {
-      "Parvocalanus parvus": 40,
-      "Ceriodaphnia dubia": 17,
-      "Diaptomus sicilianus": 5,
+      "Chelorchestia darwinii": 18,
+      "Ceratopogonidae (larva)": 2,
+      "Chironomidae (larva)": 1,
+      "Ceratopogonidae (pupa)": 1,
+      "Trombicula sp": 1,
+      "Euraphia rizophorae": 1,
     },
   },
 ];
@@ -85,5 +98,7 @@ export function AmostrasProvider({ children }: { children: ReactNode }) {
     );
   }
 
-  return <Ctx.Provider value={{ amostras, obter, salvar }}>{children}</Ctx.Provider>;
+  return (
+    <Ctx.Provider value={{ amostras, obter, salvar }}>{children}</Ctx.Provider>
+  );
 }

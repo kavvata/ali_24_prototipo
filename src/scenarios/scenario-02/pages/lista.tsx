@@ -1,6 +1,12 @@
 import { ChevronRight } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import type { PaginaProps } from "@/scenarios";
 import { useAmostras } from "@/amostras";
 

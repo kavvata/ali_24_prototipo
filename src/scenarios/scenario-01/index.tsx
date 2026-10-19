@@ -10,9 +10,9 @@ export const CENARIO_01: Cenario = {
   id: "01",
   amostra: {
     id: "A-17",
-    data: "12/03/2025",
-    estacao: "Estação 3 – Rio Piraí",
-    coords: "22°51′S 43°12′W",
+    data: "28/10/2021",
+    estacao: "Estação 1 – Parque Estadual do Boguaçu, Guaratuba (PR)",
+    coords: "25°44′S 48°33′W",
   },
   paginas: [
     { id: "registro", rotulo: "Registro de ocorrências", Componente: RegistroOcorrencias },
