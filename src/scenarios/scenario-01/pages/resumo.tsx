@@ -4,12 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { PaginaProps } from "@/scenarios";
 
+import { useAmostras } from "@/amostras";
+
 import { CENARIO_01, TAXA } from "../index";
 import { useCenario01 } from "../state";
 
 export function ResumoAmostra({ irPara }: PaginaProps) {
   const { totais, reiniciar } = useCenario01();
-  const amostra = CENARIO_01.amostra;
+  const { salvar } = useAmostras();
+  const amostra = CENARIO_01.amostra!;
   const registrados = TAXA.filter((t) => (totais.get(t) ?? 0) > 0);
   const totalOcorrencias = [...totais.values()].reduce((a, b) => a + b, 0);
 
@@ -60,11 +63,12 @@ export function ResumoAmostra({ irPara }: PaginaProps) {
       <div className="flex justify-center">
         <Button
           onClick={() => {
+            salvar(amostra.id, Object.fromEntries(totais));
             reiniciar();
             irPara(0);
           }}
         >
-          Registrar nova amostra
+          Salvar e registrar nova amostra
         </Button>
       </div>
     </>

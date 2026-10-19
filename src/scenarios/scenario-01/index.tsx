@@ -4,20 +4,7 @@ import { RegistroOcorrencias } from "./pages/registro-ocorrencias";
 import { RevisaoContagens } from "./pages/revisao-contagens";
 import { ResumoAmostra } from "./pages/resumo";
 
-export type Taxon = string;
-
-export const TAXA: Taxon[] = [
-  "Pseudodiaptomus forbesi",
-  "Diaptomus sicilianus",
-  "Cyclops strenuus",
-  "Acanthocyclops vivalis",
-  "Eucyclops pectinifer",
-  "Bosmina coregoni",
-  "Daphnia galeata",
-  "Ceriodaphnia dubia",
-  "Moina micrura",
-  "Parvocalanus parvus",
-].sort();
+export { TAXA, type Taxon } from "../../taxa";
 
 export const CENARIO_01: Cenario = {
   id: "01",

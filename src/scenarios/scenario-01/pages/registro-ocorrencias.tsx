@@ -102,6 +102,17 @@ export function RegistroOcorrencias() {
                   showClear
                   placeholder="Ex.: pseudodiaptomus…"
                   className="w-full max-w-sm"
+                  onKeyDown={(e) => {
+                    // Tab com texto na busca confirma o item destacado, como se fosse Enter
+                    if (e.key !== "Tab" || !e.currentTarget.value.trim()) return;
+                    const item = document.querySelector<HTMLElement>(
+                      '[data-slot="combobox-content"] [data-slot="combobox-item"][data-highlighted]',
+                    );
+                    if (item) {
+                      e.preventDefault();
+                      item.click();
+                    }
+                  }}
                 />
                 <ComboboxContent>
                   <ComboboxList>
